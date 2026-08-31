@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>九九ふく習ドリル - 正しいとなえ方で学ぶ算数</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'BIZ UDPGothic', 'Noto Sans JP', sans-serif;
+      background-color: #f4f6f9;
+      color: #24292f;
+    }
+    .textbook-card {
+      background: #ffffff;
+      border: 1px solid #d0d7de;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .option-btn {
+      transition: all 0.15s ease-in-out;
+    }
+    .option-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+    .option-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    @keyframes speakPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+    .speaking-active {
+      animation: speakPulse 1s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-3 sm:p-6">
+
+  <header class="max-w-3xl w-full mx-auto mb-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between border-b border-slate-300 pb-3 gap-3">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-wide flex items-center gap-2">
+          <svg class="w-7 h-7 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          九九 ふく習ドリル
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">正しいとなえ方の音声を聞きながら、九九をくり返し学習します</p>
+      </div>
+
+      <!-- ナビゲーション -->
+      <nav class="flex space-x-1 bg-slate-200 p-1 rounded-lg">
+        <button id="tabStudyBtn" class="px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md bg-white text-indigo-900 shadow-sm transition">
+          ふく習ドリル
+        </button>
+        <button id="tabTestBtn" class="px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md text-slate-600 hover:text-slate-900 transition">
+          60秒テスト
+        </button>
+        <button id="tabListBtn" class="px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md text-slate-600 hover:text-slate-900 transition">
+          九九の表
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl w-full mx-auto flex-grow flex flex-col justify-center">
+
+    <!-- 1. ふく習ドリル -->
+    <section id="studySection" class="w-full">
+      <!-- せってい画面 -->
+      <div id="setupCard" class="textbook-card rounded-xl p-5 sm:p-7 mb-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-4 pb-2 border-b border-slate-200 flex items-center justify-between">
+          <span>学習する だんを えらんでください</span>
+          <span class="text-xs font-normal text-slate-500">いくつでも えらべます</span>
+        </h2>
+
+        <!-- だんの えらびボタン -->
+        <div class="grid grid-cols-3 sm:grid-cols-5 gap-2.5 mb-5">
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="1">1のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="2">2のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="3">3のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="4">4のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="5">5のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="6">6のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="7">7のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="8">8のだん</button>
+          <button type="button" class="dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition" data-dan="9">9のだん</button>
+          <button type="button" id="selectAllDanBtn" class="p-3 rounded-lg border-2 border-slate-300 bg-slate-100 text-slate-700 font-bold text-center hover:bg-slate-200 transition">すべて えらぶ</button>
+        </div>
+
+        <!-- もんだいの じゅんばんと速さ -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200 mb-6 text-sm">
+          <div>
+            <label class="block font-bold text-slate-700 mb-2">もんだいの じゅんばん</label>
+            <div class="flex gap-4">
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="orderType" value="sequential" checked class="w-4 h-4 text-indigo-600">
+                <span class="ml-2 text-slate-800">じゅんばんどおり（1〜9）</span>
+              </label>
+              <label class="flex items-center cursor-pointer">
+                <input type="radio" name="orderType" value="random" class="w-4 h-4 text-indigo-600">
+                <span class="ml-2 text-slate-800">ランダムに出題</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-2">音声の速さ</label>
+            <div class="flex items-center gap-3">
+              <input type="range" id="speechRate" min="0.7" max="1.2" step="0.1" value="0.9" class="w-full accent-indigo-600">
+              <span id="speechRateLabel" class="text-xs text-slate-600 w-12 text-right">ふつう</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学習開始ボタン -->
+        <button id="startStudyBtn" disabled class="w-full py-3.5 bg-slate-300 text-slate-500 font-bold text-lg rounded-lg shadow-none cursor-not-allowed transition flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          学習をはじめる
+        </button>
+      </div>
+
+      <!-- もんだい画面 -->
+      <div id="questionCard" class="hidden textbook-card rounded-xl p-5 sm:p-8">
+        <div class="flex items-center justify-between text-xs sm:text-sm text-slate-600 mb-2">
+          <span id="progressText" class="font-bold text-slate-700">第 1 問 / 全 9 問</span>
+          <button id="abortStudyBtn" class="text-slate-500 hover:text-indigo-800 underline text-xs font-semibold">ホームにもどる</button>
+        </div>
+        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-6">
+          <div id="progressBar" class="bg-indigo-600 h-full transition-all duration-300" style="width: 10%;"></div>
+        </div>
+
+        <!-- 式の表示 -->
+        <div class="text-center my-4 py-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+          <button id="replayQuestionVoiceBtn" title="問題をもう一度読み上げる" class="absolute top-3 right-3 p-2 text-slate-500 hover:text-indigo-700 bg-white border border-slate-300 rounded-full shadow-sm">
+            <svg id="speakerIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+            </svg>
+          </button>
+
+          <p class="text-xs sm:text-sm font-semibold text-slate-500 mb-1">【問題】</p>
+          <div id="mathExpression" class="text-4xl sm:text-6xl font-bold tracking-wider text-slate-900 mb-2 font-mono">
+            3 × 8 ＝ <span class="text-indigo-600">？</span>
+          </div>
+
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-300 rounded-full text-xs sm:text-sm text-slate-700">
+            <span class="text-slate-500">となえ方：</span>
+            <span id="questionChantText" class="font-bold text-indigo-900">さんぱ</span>
+          </div>
+        </div>
+
+        <!-- 答えのえらびボタン -->
+        <div class="mb-4">
+          <p class="text-xs text-slate-500 mb-2 font-bold">正しい 答えを 1つ えらんでください：</p>
+          <div id="optionsContainer" class="grid grid-cols-2 gap-3 sm:gap-4">
+            <!-- ボタンはJSで作成 -->
+          </div>
+        </div>
+
+        <!-- 答えのせつ明 -->
+        <div id="feedbackPanel" class="hidden p-4 rounded-lg border transition-all">
+          <div class="flex items-start gap-3">
+            <div id="feedbackIcon" class="mt-0.5 flex-shrink-0"></div>
+            <div class="flex-grow">
+              <h3 id="feedbackTitle" class="font-bold text-base mb-1">正かいです</h3>
+              <p id="feedbackDetail" class="text-sm text-slate-700 mb-1">3 × 8 ＝ 24 （さんぱ にじゅうし）</p>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-slate-500 flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5 animate-spin text-slate-400" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  次の問題へ進みます…
+                </span>
+                <button id="skipNextBtn" class="text-xs font-semibold text-indigo-700 hover:text-indigo-900 underline">
+                  今すぐ進む ➔
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- おわり・まとめ画面 -->
+      <div id="summaryCard" class="hidden textbook-card rounded-xl p-6 sm:p-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-50 border border-indigo-200 rounded-full text-indigo-700 mb-4">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mb-2">ふく習が おわりました</h2>
+        <p class="text-sm text-slate-600 mb-6">まちがえた問題や 苦手な だんは、九九の となえ方を たしかめながら もう一度 練習しましょう。</p>
+
+        <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-6 text-left bg-slate-50 p-4 rounded-lg border border-slate-200">
+          <div>
+            <span class="block text-xs text-slate-500">もんだいの数</span>
+            <span id="summaryTotalCount" class="text-xl font-bold text-slate-800">9 問</span>
+          </div>
+          <div>
+            <span class="block text-xs text-slate-500">正かい数</span>
+            <span id="summaryCorrectCount" class="text-xl font-bold text-emerald-700">9 問</span>
+          </div>
+        </div>
+
+        <div id="wrongQuestionsListContainer" class="hidden text-left mb-6">
+          <h4 class="text-sm font-bold text-slate-700 mb-2">もう一度 たしかめる 問題：</h4>
+          <ul id="wrongQuestionsList" class="space-y-1.5 text-xs sm:text-sm bg-rose-50 border border-rose-200 p-3 rounded-lg text-rose-900"></ul>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+          <button id="retryStudyBtn" class="px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-sm rounded-lg shadow">
+            同じ せっていでもう一度
+          </button>
+          <button id="backToSetupBtn" class="px-5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-lg shadow-sm">
+            ホームにもどる
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 60秒テスト -->
+    <section id="testSection" class="hidden w-full">
+      <!-- テストのせつ明 -->
+      <div id="testSetupCard" class="textbook-card rounded-xl p-5 sm:p-7">
+        <div class="border-b border-slate-200 pb-3 mb-4">
+          <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-amber-100 text-amber-900 text-xs font-bold rounded">実力だめし</span>
+            60秒 ノーミステスト
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            60秒の 間に、<strong>まちがえずに 何問 つづけて 正かいできるか</strong> ちょうせんします。<br>
+            ※ 1問でも まちがえるか、時間が なくなると テストはおわりです。出題のときに問題、正かいのときに答えを 読み上げます。
+          </p>
+        </div>
+
+        <!-- テストする だん -->
+        <div class="mb-4">
+          <label class="block font-bold text-slate-700 text-sm mb-2">テストする だん：</label>
+          <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-3">
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="1">1のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="2">2のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="3">3のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="4">4のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="5">5のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="6">6のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="7">7のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="8">8のだん</button>
+            <button type="button" class="test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition" data-dan="9">9のだん</button>
+            <button type="button" id="selectAllTestDanBtn" class="p-2.5 rounded-lg border-2 border-slate-300 bg-slate-100 text-slate-700 font-bold text-center text-xs sm:text-sm hover:bg-slate-200 transition">全だん えらび中</button>
+          </div>
+        </div>
+
+        <button id="startTestBtn" class="w-full py-3.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-lg rounded-lg shadow transition flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          60秒テストを はじめる
+        </button>
+      </div>
+
+      <!-- テスト中の画面 -->
+      <div id="testActiveCard" class="hidden textbook-card rounded-xl p-5 sm:p-8">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-500">のこり時間:</span>
+            <span id="testTimeLeftText" class="text-2xl font-bold font-mono text-indigo-700">60</span>
+            <span class="text-xs text-slate-500">秒</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="text-right">
+              <span class="text-xs text-slate-500 block">つづけて 正かい</span>
+              <span id="testStreakText" class="text-xl font-bold text-emerald-700 font-mono">0 問</span>
+            </div>
+            <button id="abortTestBtn" class="text-slate-500 hover:text-indigo-800 underline text-xs font-semibold">ホームにもどる</button>
+          </div>
+        </div>
+
+        <!-- 時間のバー -->
+        <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-6">
+          <div id="testTimerBar" class="bg-indigo-600 h-full transition-all duration-1000 linear" style="width: 100%;"></div>
+        </div>
+
+        <!-- テストの問題 -->
+        <div class="text-center my-4 py-4 bg-slate-50 rounded-lg border border-slate-200 relative">
+          <p class="text-xs sm:text-sm font-semibold text-slate-500 mb-1">【問題】</p>
+          <div id="testMathExpression" class="text-4xl sm:text-6xl font-bold tracking-wider text-slate-900 mb-2 font-mono">
+            ? × ? ＝ <span class="text-indigo-600">？</span>
+          </div>
+
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-300 rounded-full text-xs sm:text-sm text-slate-700">
+            <span class="text-slate-500">となえ方：</span>
+            <span id="testQuestionChantText" class="font-bold text-indigo-900">-</span>
+          </div>
+        </div>
+
+        <!-- テストの答えボタン -->
+        <div class="mb-4">
+          <div id="testOptionsContainer" class="grid grid-cols-2 gap-3 sm:gap-4"></div>
+        </div>
+
+        <div id="testFeedbackStatus" class="hidden p-3 rounded-lg text-center text-sm font-bold"></div>
+      </div>
+
+      <!-- テストのおわり画面 -->
+      <div id="testSummaryCard" class="hidden textbook-card rounded-xl p-6 sm:p-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-50 border border-indigo-200 rounded-full text-indigo-700 mb-3">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+          </svg>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mb-1">60秒テスト おわり</h2>
+        <p id="testFinishReason" class="text-xs sm:text-sm text-slate-600 mb-5">時間が なくなりました</p>
+
+        <div class="max-w-xs mx-auto bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
+          <span class="block text-xs text-slate-500 font-bold mb-1">ノーミスで つづけて正かいした数</span>
+          <span id="testFinalStreakCount" class="text-4xl font-bold text-indigo-700 font-mono">0</span>
+          <span class="text-sm font-bold text-slate-700 ml-1">問</span>
+        </div>
+
+        <div id="testWrongReviewContainer" class="hidden text-left mb-6 max-w-md mx-auto">
+          <h4 class="text-xs font-bold text-rose-800 mb-1.5">まちがえた問題の おさらい：</h4>
+          <div id="testWrongReviewContent" class="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs sm:text-sm text-rose-950"></div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+          <button id="retryTestBtn" class="px-5 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-sm rounded-lg shadow">
+            もう一度 ちょうせんする
+          </button>
+          <button id="backToHomeFromTestBtn" class="px-5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-lg shadow-sm">
+            ホームにもどる
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 九九の表 -->
+    <section id="listSection" class="hidden w-full textbook-card rounded-xl p-5 sm:p-7">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-200 pb-3 mb-4 gap-2">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">九九のとなえ方 表</h2>
+          <p class="text-xs text-slate-500">音のボタンをおすと、問題と答えの 読み上げを聞くことができます。</p>
+        </div>
+        <div class="flex flex-wrap gap-1">
+          <button class="table-filter-btn px-2.5 py-1 text-xs font-bold rounded bg-indigo-700 text-white" data-filter="all">全だん</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="1">1</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="2">2</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="3">3</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="4">4</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="5">5</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="6">6</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="7">7</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="8">8</button>
+          <button class="table-filter-btn px-2 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="9">9</button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto max-h-[65vh] overflow-y-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead class="bg-slate-100 text-slate-700 sticky top-0 border-b border-slate-300">
+            <tr>
+              <th class="p-2.5 font-bold text-center w-12">だん</th>
+              <th class="p-2.5 font-bold w-24">式</th>
+              <th class="p-2.5 font-bold w-16 text-center">答え</th>
+              <th class="p-2.5 font-bold">となえ方（読み上げ）</th>
+              <th class="p-2.5 font-bold text-center w-24">音声</th>
+            </tr>
+          </thead>
+          <tbody id="kukuTableBody" class="divide-y divide-slate-200 bg-white"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="max-w-3xl w-full mx-auto mt-6 pt-3 border-t border-slate-300 text-center text-xs text-slate-500">
+    <p>九九 算数ふく習ドリル — 正しいとなえ方（音声読み上げつき）</p>
+  </footer>
+
+  <script>
+    /**
+     * 九九の 81通り データ
+     */
+    const KUKU_DATA = [
+      // 1のだん
+      { dan: 1, a: 1, b: 1, ans: 1, chantDisplay: "いんいちが いち（一一が 1）", questionVoice: "いんいちが", answerVoice: "いち" },
+      { dan: 1, a: 1, b: 2, ans: 2, chantDisplay: "いんにが に（一二が 2）", questionVoice: "いんにが", answerVoice: "に" },
+      { dan: 1, a: 1, b: 3, ans: 3, chantDisplay: "いんさんが さん（一三が 3）", questionVoice: "いんさんが", answerVoice: "さん" },
+      { dan: 1, a: 1, b: 4, ans: 4, chantDisplay: "いんしが し（一四が 4）", questionVoice: "いんしが", answerVoice: "し" },
+      { dan: 1, a: 1, b: 5, ans: 5, chantDisplay: "いんごが ご（一五が 5）", questionVoice: "いんごが", answerVoice: "ご" },
+      { dan: 1, a: 1, b: 6, ans: 6, chantDisplay: "いんろくが ろく（一六が 6）", questionVoice: "いんろくが", answerVoice: "ろく" },
+      { dan: 1, a: 1, b: 7, ans: 7, chantDisplay: "いんしちが しち（一七が 7）", questionVoice: "いんしちが", answerVoice: "しち" },
+      { dan: 1, a: 1, b: 8, ans: 8, chantDisplay: "いんはちが はち（一八が 8）", questionVoice: "いんはちが", answerVoice: "はち" },
+      { dan: 1, a: 1, b: 9, ans: 9, chantDisplay: "いんくが く（一九が 9）", questionVoice: "いんくが", answerVoice: "く" },
+
+      // 2のだん
+      { dan: 2, a: 2, b: 1, ans: 2, chantDisplay: "にいちが に（二一が 2）", questionVoice: "にいちが", answerVoice: "に" },
+      { dan: 2, a: 2, b: 2, ans: 4, chantDisplay: "ににんが し（二二が 4）", questionVoice: "ににんが", answerVoice: "し" },
+      { dan: 2, a: 2, b: 3, ans: 6, chantDisplay: "にさんが ろく（二三が 6）", questionVoice: "にさんが", answerVoice: "ろく" },
+      { dan: 2, a: 2, b: 4, ans: 8, chantDisplay: "にしが はち（二四が 8）", questionVoice: "にしが", answerVoice: "はち" },
+      { dan: 2, a: 2, b: 5, ans: 10, chantDisplay: "にご じゅう（二五 10）", questionVoice: "にご", answerVoice: "じゅう" },
+      { dan: 2, a: 2, b: 6, ans: 12, chantDisplay: "にろく じゅうに（二六 12）", questionVoice: "にろく", answerVoice: "じゅうに" },
+      { dan: 2, a: 2, b: 7, ans: 14, chantDisplay: "にしち じゅうし（二七 14）", questionVoice: "にしち", answerVoice: "じゅうし" },
+      { dan: 2, a: 2, b: 8, ans: 16, chantDisplay: "にはち じゅうろく（二八 16）", questionVoice: "にはち", answerVoice: "じゅうろく" },
+      { dan: 2, a: 2, b: 9, ans: 18, chantDisplay: "にく じゅうはち（二九 18）", questionVoice: "にく", answerVoice: "じゅうはち" },
+
+      // 3のだん
+      { dan: 3, a: 3, b: 1, ans: 3, chantDisplay: "さんいちが さん（三一が 3）", questionVoice: "さんいちが", answerVoice: "さん" },
+      { dan: 3, a: 3, b: 2, ans: 6, chantDisplay: "さんにが ろく（三二が 6）", questionVoice: "さんにが", answerVoice: "ろく" },
+      { dan: 3, a: 3, b: 3, ans: 9, chantDisplay: "さざんが く（三三が 9）", questionVoice: "さざんが", answerVoice: "く" },
+      { dan: 3, a: 3, b: 4, ans: 12, chantDisplay: "さんし じゅうに（三四 12）", questionVoice: "さんし", answerVoice: "じゅうに" },
+      { dan: 3, a: 3, b: 5, ans: 15, chantDisplay: "さんご じゅうご（三五 15）", questionVoice: "さんご", answerVoice: "じゅうご" },
+      { dan: 3, a: 3, b: 6, ans: 18, chantDisplay: "さぶろく じゅうはち（三六 18）", questionVoice: "さぶろく", answerVoice: "じゅうはち" },
+      { dan: 3, a: 3, b: 7, ans: 21, chantDisplay: "さんしち にじゅういち（三七 21）", questionVoice: "さんしち", answerVoice: "にじゅういち" },
+      { dan: 3, a: 3, b: 8, ans: 24, chantDisplay: "さんぱ にじゅうし（三八 24）", questionVoice: "さんぱ", answerVoice: "にじゅうし" },
+      { dan: 3, a: 3, b: 9, ans: 27, chantDisplay: "さんく にじゅうしち（三九 27）", questionVoice: "さんく", answerVoice: "にじゅうしち" },
+
+      // 4のだん
+      { dan: 4, a: 4, b: 1, ans: 4, chantDisplay: "しいちが し（四一が 4）", questionVoice: "しいちが", answerVoice: "し" },
+      { dan: 4, a: 4, b: 2, ans: 8, chantDisplay: "しにが はち（四二が 8）", questionVoice: "しにが", answerVoice: "はち" },
+      { dan: 4, a: 4, b: 3, ans: 12, chantDisplay: "しさん じゅうに（四三 12）", questionVoice: "しさん", answerVoice: "じゅうに" },
+      { dan: 4, a: 4, b: 4, ans: 16, chantDisplay: "しし じゅうろく（四四 16）", questionVoice: "しし", answerVoice: "じゅうろく" },
+      { dan: 4, a: 4, b: 5, ans: 20, chantDisplay: "しご にじゅう（四五 20）", questionVoice: "しご", answerVoice: "にじゅう" },
+      { dan: 4, a: 4, b: 6, ans: 24, chantDisplay: "しろく にじゅうし（四六 24）", questionVoice: "しろく", answerVoice: "にじゅうし" },
+      { dan: 4, a: 4, b: 7, ans: 28, chantDisplay: "ししち にじゅうはち（四七 28）", questionVoice: "ししち", answerVoice: "にじゅうはち" },
+      { dan: 4, a: 4, b: 8, ans: 32, chantDisplay: "しは さんじゅうに（四八 32）", questionVoice: "しは", answerVoice: "さんじゅうに" },
+      { dan: 4, a: 4, b: 9, ans: 36, chantDisplay: "しく さんじゅうろく（四九 36）", questionVoice: "しく", answerVoice: "さんじゅうろく" },
+
+      // 5のだん
+      { dan: 5, a: 5, b: 1, ans: 5, chantDisplay: "ごいちが ご（五一が 5）", questionVoice: "ごいちが", answerVoice: "ご" },
+      { dan: 5, a: 5, b: 2, ans: 10, chantDisplay: "ごに じゅう（五二 10）", questionVoice: "ごに", answerVoice: "じゅう" },
+      { dan: 5, a: 5, b: 3, ans: 15, chantDisplay: "ごさん じゅうご（五三 15）", questionVoice: "ごさん", answerVoice: "じゅうご" },
+      { dan: 5, a: 5, b: 4, ans: 20, chantDisplay: "ごし にじゅう（五四 20）", questionVoice: "ごし", answerVoice: "にじゅう" },
+      { dan: 5, a: 5, b: 5, ans: 25, chantDisplay: "ごご にじゅうご（五五 25）", questionVoice: "ごご", answerVoice: "にじゅうご" },
+      { dan: 5, a: 5, b: 6, ans: 30, chantDisplay: "ごろく さんじゅう（五六 30）", questionVoice: "ごろく", answerVoice: "さんじゅう" },
+      { dan: 5, a: 5, b: 7, ans: 35, chantDisplay: "ごしち さんじゅうご（五七 35）", questionVoice: "ごしち", answerVoice: "さんじゅうご" },
+      { dan: 5, a: 5, b: 8, ans: 40, chantDisplay: "ごは しじゅう（五八 40）", questionVoice: "ごは", answerVoice: "しじゅう" },
+      { dan: 5, a: 5, b: 9, ans: 45, chantDisplay: "ごっく しじゅうご（五九 45）", questionVoice: "ごっく", answerVoice: "しじゅうご" },
+
+      // 6のだん
+      { dan: 6, a: 6, b: 1, ans: 6, chantDisplay: "ろくいちが ろく（六一が 6）", questionVoice: "ろくいちが", answerVoice: "ろく" },
+      { dan: 6, a: 6, b: 2, ans: 12, chantDisplay: "ろくに じゅうに（六二 12）", questionVoice: "ろくに", answerVoice: "じゅうに" },
+      { dan: 6, a: 6, b: 3, ans: 18, chantDisplay: "ろくさん じゅうはち（六三 18）", questionVoice: "ろくさん", answerVoice: "じゅうはち" },
+      { dan: 6, a: 6, b: 4, ans: 24, chantDisplay: "ろくし にじゅうし（六四 24）", questionVoice: "ろくし", answerVoice: "にじゅうし" },
+      { dan: 6, a: 6, b: 5, ans: 30, chantDisplay: "ろくご さんじゅう（六五 30）", questionVoice: "ろくご", answerVoice: "さんじゅう" },
+      { dan: 6, a: 6, b: 6, ans: 36, chantDisplay: "ろくろく さんじゅうろく（六六 36）", questionVoice: "ろくろく", answerVoice: "さんじゅうろく" },
+      { dan: 6, a: 6, b: 7, ans: 42, chantDisplay: "ろくしち しじゅうに（六七 42）", questionVoice: "ろくしち", answerVoice: "しじゅうに" },
+      { dan: 6, a: 6, b: 8, ans: 48, chantDisplay: "ろくは しじゅうはち（六八 48）", questionVoice: "ろくは", answerVoice: "しじゅうはち" },
+      { dan: 6, a: 6, b: 9, ans: 54, chantDisplay: "ろくく ごじゅうし（六九 54）", questionVoice: "ろくく", answerVoice: "ごじゅうし" },
+
+      // 7のだん
+      { dan: 7, a: 7, b: 1, ans: 7, chantDisplay: "しちいちが しち（七一が 7）", questionVoice: "しちいちが", answerVoice: "しち" },
+      { dan: 7, a: 7, b: 2, ans: 14, chantDisplay: "しちに じゅうし（七二 14）", questionVoice: "しちに", answerVoice: "じゅうし" },
+      { dan: 7, a: 7, b: 3, ans: 21, chantDisplay: "しちさん にじゅういち（七三 21）", questionVoice: "しちさん", answerVoice: "にじゅういち" },
+      { dan: 7, a: 7, b: 4, ans: 28, chantDisplay: "しちし にじゅうはち（七四 28）", questionVoice: "しちし", answerVoice: "にじゅうはち" },
+      { dan: 7, a: 7, b: 5, ans: 35, chantDisplay: "しちご さんじゅうご（七五 35）", questionVoice: "しちご", answerVoice: "さんじゅうご" },
+      { dan: 7, a: 7, b: 6, ans: 42, chantDisplay: "しちろく しじゅうに（七六 42）", questionVoice: "しちろく", answerVoice: "しじゅうに" },
+      { dan: 7, a: 7, b: 7, ans: 49, chantDisplay: "しちしち しじゅうく（七七 49）", questionVoice: "しちしち", answerVoice: "しじゅうく" },
+      { dan: 7, a: 7, b: 8, ans: 56, chantDisplay: "しちは ごじゅうろく（七八 56）", questionVoice: "しちは", answerVoice: "ごじゅうろく" },
+      { dan: 7, a: 7, b: 9, ans: 63, chantDisplay: "しちく ろくじゅうさん（七九 63）", questionVoice: "しちく", answerVoice: "ろくじゅうさん" },
+
+      // 8のだん
+      { dan: 8, a: 8, b: 1, ans: 8, chantDisplay: "はちいちが はち（八一が 8）", questionVoice: "はちいちが", answerVoice: "はち" },
+      { dan: 8, a: 8, b: 2, ans: 16, chantDisplay: "はちに じゅうろく（八二 16）", questionVoice: "はちに", answerVoice: "じゅうろく" },
+      { dan: 8, a: 8, b: 3, ans: 24, chantDisplay: "はちさん にじゅうし（八三 24）", questionVoice: "はちさん", answerVoice: "にじゅうし" },
+      { dan: 8, a: 8, b: 4, ans: 32, chantDisplay: "はちし さんじゅうに（八四 32）", questionVoice: "はちし", answerVoice: "さんじゅうに" },
+      { dan: 8, a: 8, b: 5, ans: 40, chantDisplay: "はちご しじゅう（八五 40）", questionVoice: "はちご", answerVoice: "しじゅう" },
+      { dan: 8, a: 8, b: 6, ans: 48, chantDisplay: "はちろく しじゅうはち（八六 48）", questionVoice: "はちろく", answerVoice: "しじゅうはち" },
+      { dan: 8, a: 8, b: 7, ans: 56, chantDisplay: "はちしち ごじゅうろく（八七 56）", questionVoice: "はちしち", answerVoice: "ごじゅうろく" },
+      { dan: 8, a: 8, b: 8, ans: 64, chantDisplay: "はっぱ ろくじゅうし（八八 64）", questionVoice: "はっぱ", answerVoice: "ろくじゅうし" },
+      { dan: 8, a: 8, b: 9, ans: 72, chantDisplay: "はっく しちじゅうに（八九 72）", questionVoice: "はっく", answerVoice: "しちじゅうに" },
+
+      // 9のだん
+      { dan: 9, a: 9, b: 1, ans: 9, chantDisplay: "くいちが く（九一が 9）", questionVoice: "くいちが", answerVoice: "く" },
+      { dan: 9, a: 9, b: 2, ans: 18, chantDisplay: "くに じゅうはち（九二 18）", questionVoice: "くに", answerVoice: "じゅうはち" },
+      { dan: 9, a: 9, b: 3, ans: 27, chantDisplay: "くさん にじゅうしち（九三 27）", questionVoice: "くさん", answerVoice: "にじゅうしち" },
+      { dan: 9, a: 9, b: 4, ans: 36, chantDisplay: "くし さんじゅうろく（九四 36）", questionVoice: "くし", answerVoice: "さんじゅうろく" },
+      { dan: 9, a: 9, b: 5, ans: 45, chantDisplay: "くご しじゅうご（九五 45）", questionVoice: "くご", answerVoice: "しじゅうご" },
+      { dan: 9, a: 9, b: 6, ans: 54, chantDisplay: "くろく ごじゅうし（九六 54）", questionVoice: "くろく", answerVoice: "ごじゅうし" },
+      { dan: 9, a: 9, b: 7, ans: 63, chantDisplay: "くしち ろくじゅうさん（九七 63）", questionVoice: "くしち", answerVoice: "ろくじゅうさん" },
+      { dan: 9, a: 9, b: 8, ans: 72, chantDisplay: "くは しちじゅうに（九八 72）", questionVoice: "くは", answerVoice: "しちじゅうに" },
+      { dan: 9, a: 9, b: 9, ans: 81, chantDisplay: "くく はちじゅういち（九九 81）", questionVoice: "くく", answerVoice: "はちじゅういち" }
+    ];
+
+    // 全体のじょうたい
+    let selectedDans = [];
+    let studyQueue = [];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let wrongQuestions = [];
+    let isAnswered = false;
+    let autoNextTimeout = null;
+    let questionSessionId = 0;
+    let currentActiveUtterance = null;
+
+    // 60秒テストのじょうたい
+    let testSelectedDans = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let testStreak = 0;
+    let testTimeLeft = 60;
+    let testTimerInterval = null;
+    let isTestActive = false;
+    let currentTestQuestion = null;
+    let testWrongQuestion = null;
+
+    // 音声を止める
+    function stopSpeaking() {
+      if ('speechSynthesis' in window) {
+        if (currentActiveUtterance) {
+          currentActiveUtterance.onend = null;
+          currentActiveUtterance.onerror = null;
+          currentActiveUtterance = null;
+        }
+        window.speechSynthesis.cancel();
+      }
+      const speakerIcon = document.getElementById('speakerIcon');
+      if (speakerIcon) speakerIcon.classList.remove('speaking-active');
+    }
+
+    // 音声を読み上げる
+    function speakText(text, onEndCallback = null) {
+      if (!('speechSynthesis' in window)) {
+        if (onEndCallback) onEndCallback();
+        return;
+      }
+
+      stopSpeaking();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ja-JP';
+      const rateVal = parseFloat(document.getElementById('speechRate').value) || 0.9;
+      utterance.rate = rateVal;
+      utterance.pitch = 1.0;
+
+      const voices = window.speechSynthesis.getVoices();
+      const jaVoice = voices.find(v => v.lang === 'ja-JP' || v.lang.startsWith('ja'));
+      if (jaVoice) {
+        utterance.voice = jaVoice;
+      }
+
+      const speakerIcon = document.getElementById('speakerIcon');
+      if (speakerIcon) speakerIcon.classList.add('speaking-active');
+
+      currentActiveUtterance = utterance;
+
+      let called = false;
+      const finish = () => {
+        if (called) return;
+        called = true;
+        currentActiveUtterance = null;
+        if (speakerIcon) speakerIcon.classList.remove('speaking-active');
+        if (onEndCallback) onEndCallback();
+      };
+
+      utterance.onend = () => {
+        finish();
+      };
+
+      utterance.onerror = (e) => {
+        if (e.error === 'canceled' || e.error === 'interrupted') {
+          if (speakerIcon) speakerIcon.classList.remove('speaking-active');
+          return;
+        }
+        finish();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // タブの切りかえ
+    const tabStudyBtn = document.getElementById('tabStudyBtn');
+    const tabTestBtn = document.getElementById('tabTestBtn');
+    const tabListBtn = document.getElementById('tabListBtn');
+    const studySection = document.getElementById('studySection');
+    const testSection = document.getElementById('testSection');
+    const listSection = document.getElementById('listSection');
+
+    function resetAllViews() {
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      if (testTimerInterval) clearInterval(testTimerInterval);
+      stopSpeaking();
+      isTestActive = false;
+
+      studySection.classList.add('hidden');
+      testSection.classList.add('hidden');
+      listSection.classList.add('hidden');
+
+      tabStudyBtn.className = "px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md text-slate-600 hover:text-slate-900 transition";
+      tabTestBtn.className = "px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md text-slate-600 hover:text-slate-900 transition";
+      tabListBtn.className = "px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md text-slate-600 hover:text-slate-900 transition";
+    }
+
+    tabStudyBtn.addEventListener('click', () => {
+      resetAllViews();
+      tabStudyBtn.className = "px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md bg-white text-indigo-900 shadow-sm transition";
+      studySection.classList.remove('hidden');
+      setupCard.classList.remove('hidden');
+      questionCard.classList.add('hidden');
+      summaryCard.classList.add('hidden');
+    });
+
+    tabTestBtn.addEventListener('click', () => {
+      resetAllViews();
+      tabTestBtn.className = "px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md bg-white text-indigo-900 shadow-sm transition";
+      testSection.classList.remove('hidden');
+      testSetupCard.classList.remove('hidden');
+      testActiveCard.classList.add('hidden');
+      testSummaryCard.classList.add('hidden');
+    });
+
+    tabListBtn.addEventListener('click', () => {
+      resetAllViews();
+      tabListBtn.className = "px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-md bg-white text-indigo-900 shadow-sm transition";
+      listSection.classList.remove('hidden');
+      renderTable('all');
+    });
+
+    // ふく習ドリル だんの えらび
+    const danBtns = document.querySelectorAll('.dan-btn');
+    const selectAllDanBtn = document.getElementById('selectAllDanBtn');
+    const startStudyBtn = document.getElementById('startStudyBtn');
+
+    function updateDanButtonsUI() {
+      danBtns.forEach(btn => {
+        const d = parseInt(btn.dataset.dan, 10);
+        if (selectedDans.includes(d)) {
+          btn.className = "dan-btn p-3 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center transition shadow-sm";
+        } else {
+          btn.className = "dan-btn p-3 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center hover:border-slate-300 transition";
+        }
+      });
+
+      selectAllDanBtn.innerText = selectedDans.length === 9 ? "すべて とり消す" : "すべて えらぶ";
+
+      if (selectedDans.length > 0) {
+        startStudyBtn.disabled = false;
+        startStudyBtn.className = "w-full py-3.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-lg rounded-lg shadow transition flex items-center justify-center gap-2 cursor-pointer";
+      } else {
+        startStudyBtn.disabled = true;
+        startStudyBtn.className = "w-full py-3.5 bg-slate-300 text-slate-500 font-bold text-lg rounded-lg shadow-none cursor-not-allowed transition flex items-center justify-center gap-2";
+      }
+    }
+
+    danBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const d = parseInt(btn.dataset.dan, 10);
+        if (selectedDans.includes(d)) {
+          selectedDans = selectedDans.filter(item => item !== d);
+        } else {
+          selectedDans.push(d);
+          selectedDans.sort((a, b) => a - b);
+        }
+        updateDanButtonsUI();
+      });
+    });
+
+    selectAllDanBtn.addEventListener('click', () => {
+      if (selectedDans.length === 9) {
+        selectedDans = [];
+      } else {
+        selectedDans = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      }
+      updateDanButtonsUI();
+    });
+
+    // 60秒テスト だんの えらび
+    const testDanBtns = document.querySelectorAll('.test-dan-btn');
+    const selectAllTestDanBtn = document.getElementById('selectAllTestDanBtn');
+    const startTestBtn = document.getElementById('startTestBtn');
+
+    function updateTestDanButtonsUI() {
+      testDanBtns.forEach(btn => {
+        const d = parseInt(btn.dataset.dan, 10);
+        if (testSelectedDans.includes(d)) {
+          btn.className = "test-dan-btn p-2.5 rounded-lg border-2 border-indigo-600 bg-indigo-50 font-bold text-indigo-900 text-center text-sm transition";
+        } else {
+          btn.className = "test-dan-btn p-2.5 rounded-lg border-2 border-slate-200 bg-white font-bold text-slate-500 text-center text-sm hover:border-slate-300 transition";
+        }
+      });
+
+      selectAllTestDanBtn.innerText = testSelectedDans.length === 9 ? "全だん えらび中" : "すべて えらぶ";
+
+      if (testSelectedDans.length > 0) {
+        startTestBtn.disabled = false;
+        startTestBtn.className = "w-full py-3.5 bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-lg rounded-lg shadow transition flex items-center justify-center gap-2 cursor-pointer";
+      } else {
+        startTestBtn.disabled = true;
+        startTestBtn.className = "w-full py-3.5 bg-slate-300 text-slate-500 font-bold text-lg rounded-lg shadow-none cursor-not-allowed transition flex items-center justify-center gap-2";
+      }
+    }
+
+    testDanBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const d = parseInt(btn.dataset.dan, 10);
+        if (testSelectedDans.includes(d)) {
+          testSelectedDans = testSelectedDans.filter(item => item !== d);
+        } else {
+          testSelectedDans.push(d);
+          testSelectedDans.sort((a, b) => a - b);
+        }
+        updateTestDanButtonsUI();
+      });
+    });
+
+    selectAllTestDanBtn.addEventListener('click', () => {
+      if (testSelectedDans.length === 9) {
+        testSelectedDans = [];
+      } else {
+        testSelectedDans = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      }
+      updateTestDanButtonsUI();
+    });
+
+    // 音声の速さラベル
+    const speechRateInput = document.getElementById('speechRate');
+    const speechRateLabel = document.getElementById('speechRateLabel');
+    speechRateInput.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value);
+      if (val < 0.9) speechRateLabel.innerText = "ゆっくり";
+      else if (val > 1.0) speechRateLabel.innerText = "はやい";
+      else speechRateLabel.innerText = "ふつう";
+    });
+
+    // 答えの えらび肢をつくる
+    function generateChoices(correctItem) {
+      const correctVal = correctItem.ans;
+      const choices = new Set([correctVal]);
+
+      const sameDanValues = KUKU_DATA.filter(k => k.dan === correctItem.dan).map(k => k.ans);
+      const allValues = KUKU_DATA.map(k => k.ans);
+
+      [correctVal + correctItem.a, correctVal - correctItem.a, correctVal + 1, correctVal - 1].forEach(v => {
+        if (v > 0 && v <= 81 && v !== correctVal) choices.add(v);
+      });
+
+      while (choices.size < 4) {
+        const randVal = sameDanValues[Math.floor(Math.random() * sameDanValues.length)] ||
+                        allValues[Math.floor(Math.random() * allValues.length)];
+        choices.add(randVal);
+      }
+
+      const choiceArray = Array.from(choices).slice(0, 4);
+      return choiceArray.sort(() => Math.random() - 0.5);
+    }
+
+    // ふく習ドリル 実行ロジック
+    const setupCard = document.getElementById('setupCard');
+    const questionCard = document.getElementById('questionCard');
+    const summaryCard = document.getElementById('summaryCard');
+    const abortStudyBtn = document.getElementById('abortStudyBtn');
+    const retryStudyBtn = document.getElementById('retryStudyBtn');
+    const backToSetupBtn = document.getElementById('backToSetupBtn');
+    const skipNextBtn = document.getElementById('skipNextBtn');
+
+    function startStudySession() {
+      if (selectedDans.length === 0) return;
+
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+
+      const pool = KUKU_DATA.filter(item => selectedDans.includes(item.dan));
+      const orderType = document.querySelector('input[name="orderType"]:checked').value;
+
+      studyQueue = [...pool];
+      if (orderType === 'random') {
+        for (let i = studyQueue.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [studyQueue[i], studyQueue[j]] = [studyQueue[j], studyQueue[i]];
+        }
+      }
+
+      currentIndex = 0;
+      correctCount = 0;
+      wrongQuestions = [];
+
+      setupCard.classList.add('hidden');
+      summaryCard.classList.add('hidden');
+      questionCard.classList.remove('hidden');
+
+      loadQuestion(currentIndex);
+    }
+
+    startStudyBtn.addEventListener('click', startStudySession);
+    retryStudyBtn.addEventListener('click', startStudySession);
+    
+    abortStudyBtn.addEventListener('click', () => {
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+      questionCard.classList.add('hidden');
+      summaryCard.classList.add('hidden');
+      setupCard.classList.remove('hidden');
+    });
+
+    backToSetupBtn.addEventListener('click', () => {
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+      summaryCard.classList.add('hidden');
+      setupCard.classList.remove('hidden');
+    });
+
+    function advanceToNextQuestion(expectedSessionId) {
+      if (expectedSessionId !== questionSessionId) return;
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+      currentIndex++;
+      loadQuestion(currentIndex);
+    }
+
+    skipNextBtn.addEventListener('click', () => {
+      advanceToNextQuestion(questionSessionId);
+    });
+
+    function loadQuestion(index) {
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+
+      if (index >= studyQueue.length) {
+        showSummary();
+        return;
+      }
+
+      questionSessionId++;
+      const currentSessionId = questionSessionId;
+
+      isAnswered = false;
+      const q = studyQueue[index];
+
+      document.getElementById('progressText').innerText = `第 ${index + 1} 問 / 全 ${studyQueue.length} 問`;
+      const pct = Math.round(((index) / studyQueue.length) * 100);
+      document.getElementById('progressBar').style.width = `${pct}%`;
+
+      document.getElementById('mathExpression').innerHTML = `${q.a} × ${q.b} ＝ <span class="text-indigo-600">？</span>`;
+      document.getElementById('questionChantText').innerText = q.questionVoice;
+      document.getElementById('feedbackPanel').classList.add('hidden');
+
+      const optionsContainer = document.getElementById('optionsContainer');
+      optionsContainer.innerHTML = '';
+      const choices = generateChoices(q);
+
+      choices.forEach(val => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn py-4 px-3 bg-white border-2 border-slate-300 hover:border-indigo-600 text-slate-800 font-bold text-2xl rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500';
+        btn.innerText = val;
+        btn.addEventListener('click', () => handleAnswerChoice(val, q, btn, currentSessionId));
+        optionsContainer.appendChild(btn);
+      });
+
+      speakText(q.questionVoice);
+    }
+
+    document.getElementById('replayQuestionVoiceBtn').addEventListener('click', () => {
+      const q = studyQueue[currentIndex];
+      if (q && !isAnswered) {
+        speakText(q.questionVoice);
+      }
+    });
+
+    function handleAnswerChoice(selectedVal, currentQ, clickedBtn, currentSessionId) {
+      if (isAnswered || currentSessionId !== questionSessionId) return;
+      isAnswered = true;
+
+      const isCorrect = (selectedVal === currentQ.ans);
+      const feedbackPanel = document.getElementById('feedbackPanel');
+      const feedbackIcon = document.getElementById('feedbackIcon');
+      const feedbackTitle = document.getElementById('feedbackTitle');
+      const feedbackDetail = document.getElementById('feedbackDetail');
+      const allOptionBtns = document.querySelectorAll('#optionsContainer .option-btn');
+
+      allOptionBtns.forEach(btn => {
+        const val = parseInt(btn.innerText, 10);
+        btn.disabled = true;
+        if (val === currentQ.ans) {
+          btn.classList.remove('border-slate-300', 'bg-white');
+          btn.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-900');
+        } else if (btn === clickedBtn && !isCorrect) {
+          btn.classList.remove('border-slate-300', 'bg-white');
+          btn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+        } else {
+          btn.classList.add('opacity-50');
+        }
+      });
+
+      document.getElementById('mathExpression').innerHTML = `${currentQ.a} × ${currentQ.b} ＝ <span class="text-emerald-700">${currentQ.ans}</span>`;
+      feedbackPanel.classList.remove('hidden');
+      feedbackDetail.innerText = `${currentQ.a} × ${currentQ.b} ＝ ${currentQ.ans} （${currentQ.chantDisplay}）`;
+
+      if (isCorrect) {
+        correctCount++;
+        feedbackPanel.className = 'p-4 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-950';
+        feedbackTitle.innerText = '正かいです！';
+        feedbackIcon.innerHTML = `<div class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">✓</div>`;
+      } else {
+        wrongQuestions.push(currentQ);
+        feedbackPanel.className = 'p-4 rounded-lg border border-amber-200 bg-amber-50 text-amber-950';
+        feedbackTitle.innerText = 'おしい！ 正しい 答えを たしかめましょう';
+        feedbackIcon.innerHTML = `<div class="w-6 h-6 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-sm">!</div>`;
+      }
+
+      let transitionTriggered = false;
+      const triggerNextWithDelay = () => {
+        if (transitionTriggered || currentSessionId !== questionSessionId) return;
+        transitionTriggered = true;
+        if (autoNextTimeout) clearTimeout(autoNextTimeout);
+        autoNextTimeout = setTimeout(() => {
+          advanceToNextQuestion(currentSessionId);
+        }, 500); // 0.5秒あけて進む
+      };
+
+      speakText(currentQ.answerVoice, () => {
+        triggerNextWithDelay();
+      });
+
+      autoNextTimeout = setTimeout(() => {
+        triggerNextWithDelay();
+      }, 4000);
+    }
+
+    function showSummary() {
+      questionCard.classList.add('hidden');
+      summaryCard.classList.remove('hidden');
+
+      document.getElementById('summaryTotalCount').innerText = `${studyQueue.length} 問`;
+      document.getElementById('summaryCorrectCount').innerText = `${correctCount} 問 (${Math.round((correctCount / studyQueue.length) * 100)}%)`;
+
+      const wrongContainer = document.getElementById('wrongQuestionsListContainer');
+      const wrongList = document.getElementById('wrongQuestionsList');
+
+      if (wrongQuestions.length > 0) {
+        wrongContainer.classList.remove('hidden');
+        wrongList.innerHTML = '';
+        wrongQuestions.forEach(item => {
+          const li = document.createElement('li');
+          li.className = 'flex items-center justify-between py-1 border-b border-rose-100 last:border-b-0';
+          li.innerHTML = `
+            <span class="font-bold">${item.a} × ${item.b} ＝ ${item.ans}</span>
+            <span class="text-slate-600">${item.chantDisplay}</span>
+          `;
+          wrongList.appendChild(li);
+        });
+      } else {
+        wrongContainer.classList.add('hidden');
+      }
+    }
+
+    // 60秒テストの実行
+    const testSetupCard = document.getElementById('testSetupCard');
+    const testActiveCard = document.getElementById('testActiveCard');
+    const testSummaryCard = document.getElementById('testSummaryCard');
+    const abortTestBtn = document.getElementById('abortTestBtn');
+    const retryTestBtn = document.getElementById('retryTestBtn');
+    const backToHomeFromTestBtn = document.getElementById('backToHomeFromTestBtn');
+
+    function start60sTest() {
+      if (testSelectedDans.length === 0) return;
+
+      if (testTimerInterval) clearInterval(testTimerInterval);
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+
+      isTestActive = true;
+      testStreak = 0;
+      testTimeLeft = 60;
+      testWrongQuestion = null;
+
+      testSetupCard.classList.add('hidden');
+      testSummaryCard.classList.add('hidden');
+      testActiveCard.classList.remove('hidden');
+
+      document.getElementById('testTimeLeftText').innerText = testTimeLeft;
+      document.getElementById('testTimerBar').style.width = '100%';
+      document.getElementById('testStreakText').innerText = '0 問';
+      document.getElementById('testFeedbackStatus').classList.add('hidden');
+
+      testTimerInterval = setInterval(() => {
+        if (!isTestActive) {
+          clearInterval(testTimerInterval);
+          return;
+        }
+
+        testTimeLeft--;
+        document.getElementById('testTimeLeftText').innerText = testTimeLeft;
+        const pct = Math.max(0, (testTimeLeft / 60) * 100);
+        document.getElementById('testTimerBar').style.width = `${pct}%`;
+
+        if (testTimeLeft <= 0) {
+          clearInterval(testTimerInterval);
+          finish60sTest("時間が なくなりました");
+        }
+      }, 1000);
+
+      loadNextTestQuestion();
+    }
+
+    function loadNextTestQuestion() {
+      if (!isTestActive) return;
+
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+
+      questionSessionId++;
+      const currentSessionId = questionSessionId;
+      isAnswered = false;
+
+      const pool = KUKU_DATA.filter(k => testSelectedDans.includes(k.dan));
+      currentTestQuestion = pool[Math.floor(Math.random() * pool.length)];
+
+      document.getElementById('testMathExpression').innerHTML = `${currentTestQuestion.a} × ${currentTestQuestion.b} ＝ <span class="text-indigo-600">？</span>`;
+      document.getElementById('testQuestionChantText').innerText = currentTestQuestion.questionVoice;
+      document.getElementById('testFeedbackStatus').classList.add('hidden');
+
+      const container = document.getElementById('testOptionsContainer');
+      container.innerHTML = '';
+      const choices = generateChoices(currentTestQuestion);
+
+      choices.forEach(val => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn py-4 px-3 bg-white border-2 border-slate-300 hover:border-indigo-600 text-slate-800 font-bold text-2xl rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500';
+        btn.innerText = val;
+        btn.addEventListener('click', () => handleTestAnswer(val, currentTestQuestion, btn, currentSessionId));
+        container.appendChild(btn);
+      });
+
+      speakText(currentTestQuestion.questionVoice);
+    }
+
+    function handleTestAnswer(selectedVal, q, clickedBtn, currentSessionId) {
+      if (!isTestActive || isAnswered || currentSessionId !== questionSessionId) return;
+      isAnswered = true;
+
+      const isCorrect = (selectedVal === q.ans);
+      const allBtns = document.querySelectorAll('#testOptionsContainer .option-btn');
+      const statusDiv = document.getElementById('testFeedbackStatus');
+
+      allBtns.forEach(btn => {
+        const val = parseInt(btn.innerText, 10);
+        btn.disabled = true;
+        if (val === q.ans) {
+          btn.classList.remove('border-slate-300', 'bg-white');
+          btn.classList.add('border-emerald-600', 'bg-emerald-50', 'text-emerald-900');
+        } else if (btn === clickedBtn && !isCorrect) {
+          btn.classList.remove('border-slate-300', 'bg-white');
+          btn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+        } else {
+          btn.classList.add('opacity-50');
+        }
+      });
+
+      document.getElementById('testMathExpression').innerHTML = `${q.a} × ${q.b} ＝ <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">${q.ans}</span>`;
+
+      if (isCorrect) {
+        testStreak++;
+        document.getElementById('testStreakText').innerText = `${testStreak} 問`;
+
+        statusDiv.className = 'p-2 rounded bg-emerald-100 text-emerald-900 text-xs font-bold text-center block';
+        statusDiv.innerText = `正かい！ (${q.chantDisplay})`;
+
+        let transitioned = false;
+        const proceed = () => {
+          if (transitioned || currentSessionId !== questionSessionId || !isTestActive) return;
+          transitioned = true;
+          if (autoNextTimeout) clearTimeout(autoNextTimeout);
+          autoNextTimeout = setTimeout(() => {
+            loadNextTestQuestion();
+          }, 500);
+        };
+
+        speakText(q.answerVoice, () => {
+          proceed();
+        });
+
+        autoNextTimeout = setTimeout(() => {
+          proceed();
+        }, 3000);
+
+      } else {
+        testWrongQuestion = {
+          ...q,
+          chosen: selectedVal
+        };
+
+        statusDiv.className = 'p-2 rounded bg-rose-100 text-rose-900 text-xs font-bold text-center block';
+        statusDiv.innerText = `まちがい！ ${q.a} × ${q.b} ＝ ${q.ans} （${q.chantDisplay}）`;
+
+        speakText(q.answerVoice, () => {
+          setTimeout(() => {
+            finish60sTest("まちがいがあったため、テストは おわりです");
+          }, 600);
+        });
+
+        autoNextTimeout = setTimeout(() => {
+          finish60sTest("まちがいがあったため、テストは おわりです");
+        }, 2500);
+      }
+    }
+
+    function finish60sTest(reasonText) {
+      isTestActive = false;
+      if (testTimerInterval) clearInterval(testTimerInterval);
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+
+      testActiveCard.classList.add('hidden');
+      testSummaryCard.classList.remove('hidden');
+
+      document.getElementById('testFinishReason').innerText = reasonText;
+      document.getElementById('testFinalStreakCount').innerText = testStreak;
+
+      const wrongReviewContainer = document.getElementById('testWrongReviewContainer');
+      const wrongReviewContent = document.getElementById('testWrongReviewContent');
+
+      if (testWrongQuestion) {
+        wrongReviewContainer.classList.remove('hidden');
+        wrongReviewContent.innerHTML = `
+          <div class="font-bold text-slate-900">${testWrongQuestion.a} × ${testWrongQuestion.b} ＝ ${testWrongQuestion.ans}</div>
+          <div class="text-slate-600 mt-0.5">となえ方：${testWrongQuestion.chantDisplay}</div>
+          <div class="text-rose-750 font-semibold mt-1">あなたの答え：${testWrongQuestion.chosen}</div>
+        `;
+      } else {
+        wrongReviewContainer.classList.add('hidden');
+      }
+    }
+
+    startTestBtn.addEventListener('click', start60sTest);
+    retryTestBtn.addEventListener('click', start60sTest);
+
+    abortTestBtn.addEventListener('click', () => {
+      isTestActive = false;
+      if (testTimerInterval) clearInterval(testTimerInterval);
+      if (autoNextTimeout) clearTimeout(autoNextTimeout);
+      stopSpeaking();
+      testActiveCard.classList.add('hidden');
+      testSummaryCard.classList.add('hidden');
+      testSetupCard.classList.remove('hidden');
+    });
+
+    backToHomeFromTestBtn.addEventListener('click', () => {
+      testSummaryCard.classList.add('hidden');
+      testSetupCard.classList.remove('hidden');
+    });
+
+    // 表の表示
+    function renderTable(filterDan) {
+      const tbody = document.getElementById('kukuTableBody');
+      tbody.innerHTML = '';
+
+      const items = filterDan === 'all' 
+        ? KUKU_DATA 
+        : KUKU_DATA.filter(k => k.dan === parseInt(filterDan, 10));
+
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50 border-b border-slate-200';
+
+        tr.innerHTML = `
+          <td class="p-2.5 text-center text-slate-500 font-semibold">${item.dan}</td>
+          <td class="p-2.5 font-bold font-mono text-slate-800">${item.a} × ${item.b}</td>
+          <td class="p-2.5 text-center font-bold text-indigo-900">${item.ans}</td>
+          <td class="p-2.5 text-slate-700">
+            <span class="font-semibold text-slate-900">${item.chantDisplay}</span>
+          </td>
+          <td class="p-2.5 text-center">
+            <div class="inline-flex gap-1">
+              <button title="問題の声をきく" class="table-speak-q px-2 py-1 text-xs bg-slate-100 hover:bg-indigo-100 text-indigo-800 rounded border border-slate-300">
+                問
+              </button>
+              <button title="答えの声をきく" class="table-speak-a px-2 py-1 text-xs bg-indigo-50 hover:bg-indigo-200 text-indigo-900 font-bold rounded border border-indigo-200">
+                答
+              </button>
+            </div>
+          </td>
+        `;
+
+        tr.querySelector('.table-speak-q').addEventListener('click', () => {
+          speakText(item.questionVoice);
+        });
+        tr.querySelector('.table-speak-a').addEventListener('click', () => {
+          speakText(item.answerVoice);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.querySelectorAll('.table-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.table-filter-btn').forEach(b => {
+          b.className = 'table-filter-btn px-2.5 py-1 text-xs font-bold rounded bg-slate-100 text-slate-700 hover:bg-slate-200';
+        });
+        btn.className = 'table-filter-btn px-2.5 py-1 text-xs font-bold rounded bg-indigo-700 text-white';
+        renderTable(btn.dataset.filter);
+      });
+    });
+
+    // さいしょの読み込み
+    updateDanButtonsUI();
+    updateTestDanButtonsUI();
+  </script>
+</body>
+</html>
